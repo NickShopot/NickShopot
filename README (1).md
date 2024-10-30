@@ -101,38 +101,48 @@ graph TD;
 
 ### 5. Программа
 ```java
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
-public class Main {
-    // Объявляем объект класса Scanner для ввода данных
+public class RhombusCheck {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        int[] distances = new int[6];
 
-        // Вводим данные
-        System.out.println("Введите длины отрезков A, B и C:");
-        int A = scanner.nextInt();
-        int B = scanner.nextInt();
-        int C = scanner.nextInt();
-        // Проверка можно ли сделать треугольник
-        if ((A + B > C) && (A + C > B) && (B + C > A)) {
-            System.out.println("Из сторон можно сделать треугольник");
-            // Определяем вид
-            if((A == B) && (B == C) && (A == C)) {
-                System.out.println("Треугольнниик равносторонний");
-            } else if (A == B || B == C || A == C) {
-                System.out.println("Треугольник равнобедренный");
-            }
-            int max = Math.max(A, Math.max(B, C));
-            int sumOfSquares = A * A + B * B + C * C - max * max;
-            if (max * max == sumOfSquares) {
-                System.out.println("Треугольник прямоугольный");
-            } else if (!(A == B || B == C || A == C)) {
-                System.out.println("Треугольник разносторонний");
-            }
-        } else {
-            System.out.println("Из сторон нельзя сделать треугольник");
+        System.out.println("Введите 6 натуральных чисел (расстояния):");
+        for (int i = 0; i < 6; i++) {
+            distances[i] = scanner.nextInt();
         }
-        scanner.close();    
+
+        if (isRhombus(distances)) {
+            System.out.println("YES");
+        } else {
+            System.out.println("NO");
+        }
+    }
+
+    private static boolean isRhombus(int[] distances) {
+        Map<Integer, Integer> countMap = new HashMap<>();
+
+        // Подсчитываем количество вхождений каждого расстояния
+        for (int distance : distances) {
+            countMap.put(distance, countMap.getOrDefault(distance, 0) + 1);
+        }
+
+        // Проверяем условия для ромба
+        int sideCount = 0;
+        int diagonalCount = 0;
+
+        for (Map.Entry<Integer, Integer> entry : countMap.entrySet()) {
+            if (entry.getValue() == 4) {
+                sideCount++;
+            } else if (entry.getValue() == 2) {
+                diagonalCount++;
+            }
+        }
+
+        return sideCount == 1 && diagonalCount == 1; // Одна длина стороны и одна длина диагонали
     }
 }
 
